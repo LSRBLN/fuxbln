@@ -1,0 +1,1 @@
+web: streamlit run tgcf/web_ui/0_👋_Hello.py --server.port=$PORT --server.address=0.0.0.0
