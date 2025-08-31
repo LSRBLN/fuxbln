@@ -1,0 +1,69 @@
+name: Auto Deploy to Render.com
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Test application
+      run: |
+        python -c "import tgcf; print('✅ Application import successful')"
+        python -c "import streamlit; print('✅ Streamlit available')"
+    
+    - name: Create deployment instructions
+      run: |
+        echo "🚀 FUXBLN Marketing Tool ist bereit für Render.com-Deployment!"
+        echo ""
+        echo "📋 Manuelle Deployment-Schritte:"
+        echo "1. Gehe zu: https://render.com"
+        echo "2. 'Sign up with GitHub' wählen"
+        echo "3. Repository LSRBLN/fuxbln verbinden"
+        echo "4. 'New Web Service' erstellen"
+        echo "5. Konfiguration:"
+        echo "   - Name: fuxbln-marketing-tool"
+        echo "   - Environment: Python 3"
+        echo "   - Build Command: pip install -r requirements.txt"
+        echo "   - Start Command: streamlit run tgcf/web_ui/0_👋_Hello.py --server.port=\$PORT --server.address=0.0.0.0 --server.headless=true"
+        echo "6. Environment-Variablen setzen:"
+        echo "   - API_ID=deine_telegram_api_id"
+        echo "   - API_HASH=dein_telegram_api_hash"
+        echo "   - PASSWORD=dein_sicheres_passwort"
+        echo "7. 'Create Web Service' klicken"
+        echo ""
+        echo "🌐 Nach dem Deployment:"
+        echo "- URL: https://fuxbln-marketing-tool.onrender.com"
+        echo "- Login mit deinem Passwort"
+        echo "- Telegram-API konfigurieren"
+    
+    - name: Create deployment status
+      run: |
+        echo "## 🚀 Deployment Status" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "✅ **Build erfolgreich**" >> $GITHUB_STEP_SUMMARY
+        echo "✅ **Tests bestanden**" >> $GITHUB_STEP_SUMMARY
+        echo "✅ **Repository bereit für Render.com**" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "📋 **Nächste Schritte:**" >> $GITHUB_STEP_SUMMARY
+        echo "1. Gehe zu [Render.com](https://render.com)" >> $GITHUB_STEP_SUMMARY
+        echo "2. Verbinde GitHub Repository" >> $GITHUB_STEP_SUMMARY
+        echo "3. Erstelle Web Service" >> $GITHUB_STEP_SUMMARY
+        echo "4. Setze Environment-Variablen" >> $GITHUB_STEP_SUMMARY
+        echo "5. Deploy!" >> $GITHUB_STEP_SUMMARY
