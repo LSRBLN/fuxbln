@@ -31,6 +31,10 @@ class Forward(BaseModel):
     dest: List[Union[int, str]] = []
     offset: int = 0
     end: Optional[int] = 0
+    # Neue Intervall-Einstellungen für Nachrichten-Posting
+    enable_interval_posting: bool = False
+    interval_seconds: int = 60
+    interval_message: str = "Automatische Nachricht vom FUXBLN Marketing Tool"
 
 
 class LiveSettings(BaseModel):
@@ -72,8 +76,8 @@ class LoginConfig(BaseModel):
 
 
 class BotMessages(BaseModel):
-    start: str = "Hi! I am alive"
-    bot_help: str = "For details visit github.com/aahnik/tgcf"
+    start: str = "Hallo! Ich bin aktiv"
+    bot_help: str = "Für Details besuchen Sie github.com/aahnik/tgcf"
 
 
 class Config(BaseModel):

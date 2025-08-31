@@ -1,10 +1,10 @@
 import os
-from importlib import resources
+from pathlib import Path
 
-import tgcf.web_ui as wu
 from tgcf.config import CONFIG
 
-package_dir = resources.path(package=wu, resource="").__enter__()
+# Get the package directory using a simple and reliable method
+package_dir = Path(__file__).parent
 
 def main():
     print(package_dir)

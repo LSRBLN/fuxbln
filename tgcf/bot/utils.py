@@ -15,7 +15,7 @@ def admin_protect(org_func):
         """Wrap the original function."""
         logging.info(f"Applying admin protection! Admins are {config.ADMINS}")
         if event.sender_id not in config.ADMINS:
-            await event.respond("You are not authorized.")
+            await event.respond("Sie sind nicht autorisiert.")
             raise events.StopPropagation
         return await org_func(event)
 
@@ -40,12 +40,12 @@ def get_args(text: str) -> str:
 def display_forwards(forwards: List[Forward]) -> str:
     """Return a string that beautifully displays all current forwards."""
     if len(forwards) == 0:
-        return "Currently no forwards are set"
-    forward_str = "This is your configuration"
+        return "Derzeit sind keine Weiterleitungen eingerichtet"
+    forward_str = "Dies ist Ihre Konfiguration"
     for forward in forwards:
         forward_str = (
             forward_str
-            + f"\n\n```\nsource: {forward.source}\ndest: {forward.dest}\n```\n"
+            + f"\n\n```\nquelle: {forward.source}\nziel: {forward.dest}\n```\n"
         )
 
     return forward_str
@@ -57,7 +57,7 @@ def remove_source(source, forwards: List[Forward]) -> List[Forward]:
         if forward.source == source:
             del forwards[i]
             return forwards
-    raise ValueError("The source does not exist")
+    raise ValueError("Die Quelle existiert nicht")
 
 
 def get_command_prefix():

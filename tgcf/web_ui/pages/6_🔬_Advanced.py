@@ -10,51 +10,51 @@ from tgcf.web_ui.utils import hide_st, switch_theme
 CONFIG = read_config()
 
 st.set_page_config(
-    page_title="Advanced",
+    page_title="Erweitert",
     page_icon="🔬",
 )
 hide_st(st)
-switch_theme(st,CONFIG)
+switch_theme(st, CONFIG)
 
 if check_password(st):
 
-    st.warning("This page is for developers and advanced users.")
-    if st.checkbox("I agree"):
+    st.warning("Diese Seite ist für Entwickler und fortgeschrittene Benutzer.")
+    if st.checkbox("Ich stimme zu"):
 
-        with st.expander("Version & Platform"):
+        with st.expander("Version & Plattform"):
             st.code(platform_info())
 
-        with st.expander("Configuration"):
+        with st.expander("Konfiguration"):
             with open(CONFIG_FILE_NAME, "r") as file:
                 data = json.loads(file.read())
                 dumped = json.dumps(data, indent=3)
             st.download_button(
-                f"Download config json", data=dumped, file_name=CONFIG_FILE_NAME
+                f"Konfiguration JSON herunterladen", data=dumped, file_name=CONFIG_FILE_NAME
             )
             st.json(data)
 
-        with st.expander("Special Options for Live Mode"):
+        with st.expander("Spezielle Optionen für Live-Modus"):
             CONFIG.live.sequential_updates = st.checkbox(
-                "Enforce sequential updates", value=CONFIG.live.sequential_updates
+                "Sequenzielle Updates erzwingen", value=CONFIG.live.sequential_updates
             )
 
             CONFIG.live.delete_on_edit = st.text_input(
-                "Delete a message when source edited to",
+                "Nachricht löschen, wenn Quelle bearbeitet wird zu",
                 value=CONFIG.live.delete_on_edit,
             )
             st.write(
-                "When you edit the message in source to something particular, the message will be deleted in both source and destinations."
+                "Wenn Sie die Nachricht in der Quelle zu etwas Bestimmtem bearbeiten, wird die Nachricht sowohl in der Quelle als auch in den Zielen gelöscht."
             )
-            if st.checkbox("Customize Bot Messages"):
+            if st.checkbox("Bot-Nachrichten anpassen"):
                 st.info(
-                    "Note: For userbots, the commands start with `.` instead of `/`, like `.start` and not `/start`"
+                    "Hinweis: Für Userbots beginnen die Befehle mit `.` statt `/`, wie `.start` und nicht `/start`"
                 )
                 CONFIG.bot_messages.start = st.text_area(
-                    "Bot's Reply to /start command", value=CONFIG.bot_messages.start
+                    "Bot-Antwort auf /start Befehl", value=CONFIG.bot_messages.start
                 )
                 CONFIG.bot_messages.bot_help = st.text_area(
-                    "Bot's Reply to /help command", value=CONFIG.bot_messages.bot_help
+                    "Bot-Antwort auf /help Befehl", value=CONFIG.bot_messages.bot_help
                 )
 
-            if st.button("Save"):
+            if st.button("Speichern"):
                 write_config(CONFIG)

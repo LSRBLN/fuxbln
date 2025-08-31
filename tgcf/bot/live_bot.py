@@ -20,15 +20,15 @@ from tgcf.plugin_models import Style
 @admin_protect
 async def forward_command_handler(event):
     """Handle the `/forward` command."""
-    notes = """The `/forward` command allows you to add a new forward.
-    Example: suppose you want to forward from a to (b and c)
+    notes = """Der `/forward` Befehl ermöglicht es Ihnen, eine neue Weiterleitung hinzuzufügen.
+    Beispiel: Angenommen, Sie möchten von a nach (b und c) weiterleiten
 
     ```
     /forward source: a
     dest: [b,c]
     ```
 
-    a,b,c are chat ids
+    a,b,c sind Chat-IDs
 
     """.replace(
         "    ", ""
@@ -48,7 +48,7 @@ async def forward_command_handler(event):
         CONFIG.forwards.append(forward)
         config.from_to = await config.load_from_to(event.client, config.CONFIG.forwards)
 
-        await event.respond("Success")
+        await event.respond("Erfolgreich")
         write_config(config.CONFIG)
     except ValueError as err:
         logging.error(err)
@@ -61,8 +61,8 @@ async def forward_command_handler(event):
 @admin_protect
 async def remove_command_handler(event):
     """Handle the /remove command."""
-    notes = """The `/remove` command allows you to remove a source from forwarding.
-    Example: Suppose you want to remove the channel with id -100, then run
+    notes = """Der `/remove` Befehl ermöglicht es Ihnen, eine Quelle aus der Weiterleitung zu entfernen.
+    Beispiel: Angenommen, Sie möchten den Kanal mit der ID -100 entfernen, dann führen Sie aus
 
     `/remove source: -100`
 
@@ -80,7 +80,7 @@ async def remove_command_handler(event):
         CONFIG.forwards = remove_source(source_to_remove, config.CONFIG.forwards)
         config.from_to = await config.load_from_to(event.client, config.CONFIG.forwards)
 
-        await event.respond("Success")
+        await event.respond("Erfolgreich")
         write_config(config.CONFIG)
     except ValueError as err:
         logging.error(err)
@@ -93,11 +93,11 @@ async def remove_command_handler(event):
 @admin_protect
 async def style_command_handler(event):
     """Handle the /style command"""
-    notes = """This command is used to set the style of the messages to be forwarded.
+    notes = """Dieser Befehl wird verwendet, um den Stil der weiterzuleitenden Nachrichten festzulegen.
 
-    Example: `/style bold`
+    Beispiel: `/style bold`
 
-    Options are preserve,normal,bold,italics,code, strike
+    Optionen sind preserve,normal,bold,italics,code, strike
 
     """.replace(
         "    ", ""
@@ -109,9 +109,9 @@ async def style_command_handler(event):
             raise ValueError(f"{notes}\n")
         _valid = [item.value for item in Style]
         if args not in _valid:
-            raise ValueError(f"Invalid style. Choose from {_valid}")
+            raise ValueError(f"Ungültiger Stil. Wählen Sie aus {_valid}")
         CONFIG.plugins.fmt.style = args
-        await event.respond("Success")
+        await event.respond("Erfolgreich")
         write_config(CONFIG)
     except ValueError as err:
         logging.error(err)

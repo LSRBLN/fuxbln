@@ -16,108 +16,108 @@ st.set_page_config(
 )
 
 hide_st(st)
-switch_theme(st,CONFIG)
+switch_theme(st, CONFIG)
 if check_password(st):
 
     with st.expander("Filter"):
         CONFIG.plugins.filter.check = st.checkbox(
-            "Use this plugin: filter", value=CONFIG.plugins.filter.check
+            "Dieses Plugin verwenden: Filter", value=CONFIG.plugins.filter.check
         )
-        st.write("Blacklist or whitelist certain text items.")
-        text_tab, users_tab, files_tab = st.tabs(["Text", "Users", "Files"])
+        st.write("Bestimmte Textelemente auf Blacklist oder Whitelist setzen.")
+        text_tab, users_tab, files_tab = st.tabs(["Text", "Benutzer", "Dateien"])
 
         with text_tab:
             CONFIG.plugins.filter.text.case_sensitive = st.checkbox(
-                "Case Sensitive", value=CONFIG.plugins.filter.text.case_sensitive
+                "Groß-/Kleinschreibung beachten", value=CONFIG.plugins.filter.text.case_sensitive
             )
             CONFIG.plugins.filter.text.regex = st.checkbox(
-                "Interpret filters as regex", value=CONFIG.plugins.filter.text.regex
+                "Filter als Regex interpretieren", value=CONFIG.plugins.filter.text.regex
             )
 
-            st.write("Enter one text expression per line")
+            st.write("Geben Sie einen Textausdruck pro Zeile ein")
             CONFIG.plugins.filter.text.whitelist = get_list(
                 st.text_area(
-                    "Text Whitelist",
+                    "Text-Whitelist",
                     value=get_string(CONFIG.plugins.filter.text.whitelist),
                 )
             )
             CONFIG.plugins.filter.text.blacklist = get_list(
                 st.text_area(
-                    "Text Blacklist",
+                    "Text-Blacklist",
                     value=get_string(CONFIG.plugins.filter.text.blacklist),
                 )
             )
 
         with users_tab:
-            st.write("Enter one username/id per line")
+            st.write("Geben Sie einen Benutzernamen/ID pro Zeile ein")
             CONFIG.plugins.filter.users.whitelist = get_list(
                 st.text_area(
-                    "Users Whitelist",
+                    "Benutzer-Whitelist",
                     value=get_string(CONFIG.plugins.filter.users.whitelist),
                 )
             )
             CONFIG.plugins.filter.users.blacklist = get_list(
                 st.text_area(
-                    "Users Blacklist", get_string(CONFIG.plugins.filter.users.blacklist)
+                    "Benutzer-Blacklist", get_string(CONFIG.plugins.filter.users.blacklist)
                 )
             )
 
         flist = [item.value for item in FileType]
         with files_tab:
             CONFIG.plugins.filter.files.whitelist = st.multiselect(
-                "Files Whitelist", flist, default=CONFIG.plugins.filter.files.whitelist
+                "Dateien-Whitelist", flist, default=CONFIG.plugins.filter.files.whitelist
             )
             CONFIG.plugins.filter.files.blacklist = st.multiselect(
-                "Files Blacklist", flist, default=CONFIG.plugins.filter.files.blacklist
+                "Dateien-Blacklist", flist, default=CONFIG.plugins.filter.files.blacklist
             )
 
     with st.expander("Format"):
         CONFIG.plugins.fmt.check = st.checkbox(
-            "Use this plugin: format", value=CONFIG.plugins.fmt.check
+            "Dieses Plugin verwenden: Format", value=CONFIG.plugins.fmt.check
         )
         st.write(
-            "Add style to text like **bold**, _italics_, ~~strikethrough~~, `monospace` etc."
+            "Stil zum Text hinzufügen wie **fett**, _kursiv_, ~~durchgestrichen~~, `monospace` etc."
         )
         style_list = [item.value for item in Style]
         CONFIG.plugins.fmt.style = st.selectbox(
             "Format", style_list, index=style_list.index(CONFIG.plugins.fmt.style)
         )
 
-    with st.expander("Watermark"):
+    with st.expander("Wasserzeichen"):
         if os.system("ffmpeg -version >> /dev/null 2>&1") != 0:
             st.warning(
-                "Could not find `ffmpeg`. Make sure to have `ffmpeg` installed in server to use this plugin."
+                "`ffmpeg` konnte nicht gefunden werden. Stellen Sie sicher, dass `ffmpeg` auf dem Server installiert ist, um dieses Plugin zu verwenden."
             )
         CONFIG.plugins.mark.check = st.checkbox(
-            "Apply watermark to media (images and videos).",
+            "Wasserzeichen auf Medien anwenden (Bilder und Videos).",
             value=CONFIG.plugins.mark.check,
         )
-        uploaded_file = st.file_uploader("Upload watermark image(png)", type=["png"])
+        uploaded_file = st.file_uploader("Wasserzeichen-Bild hochladen (png)", type=["png"])
         if uploaded_file is not None:
             with open("image.png", "wb") as f:
                 f.write(uploaded_file.getbuffer())
 
     with st.expander("OCR"):
-        st.write("Optical Character Recognition.")
+        st.write("Optische Zeichenerkennung.")
         if os.system("tesseract --version >> /dev/null 2>&1") != 0:
             st.warning(
-                "Could not find `tesseract`. Make sure to have `tesseract` installed in server to use this plugin."
+                "`tesseract` konnte nicht gefunden werden. Stellen Sie sicher, dass `tesseract` auf dem Server installiert ist, um dieses Plugin zu verwenden."
             )
         CONFIG.plugins.ocr.check = st.checkbox(
-            "Activate OCR for images", value=CONFIG.plugins.ocr.check
+            "OCR für Bilder aktivieren", value=CONFIG.plugins.ocr.check
         )
-        st.write("The text will be added in desciption of image while forwarding.")
+        st.write("Der Text wird in der Beschreibung des Bildes hinzugefügt, während es weitergeleitet wird.")
 
-    with st.expander("Replace"):
+    with st.expander("Ersetzen"):
         CONFIG.plugins.replace.check = st.checkbox(
-            "Apply text replacement", value=CONFIG.plugins.replace.check
+            "Textersetzung anwenden", value=CONFIG.plugins.replace.check
         )
         CONFIG.plugins.replace.regex = st.checkbox(
-            "Interpret as regex", value=CONFIG.plugins.replace.regex
+            "Als Regex interpretieren", value=CONFIG.plugins.replace.regex
         )
 
         CONFIG.plugins.replace.text_raw = st.text_area(
-            "Replacements", value=CONFIG.plugins.replace.text_raw
+            "Ersetzungen", value=CONFIG.plugins.replace.text_raw
         )
         try:
             replace_dict = yaml.safe_load(
@@ -133,78 +133,78 @@ if check_password(st):
         else:
             CONFIG.plugins.replace.text = replace_dict
 
-        if st.checkbox("Show rules and usage"):
+        if st.checkbox("Regeln und Verwendung anzeigen"):
             st.markdown(
                 """
-                Replace one word or expression with another.
+                Ersetzen Sie ein Wort oder einen Ausdruck durch einen anderen.
 
-                - Write every replacement in a new line.
-                - The original text then **a colon `:`** and then **a space** and then the new text.
-                - Its recommended to use **single quotes**. Quotes are must when your string contain spaces or special characters.
-                - Double quotes wont work if your regex has the character: `\` .
+                - Schreiben Sie jede Ersetzung in eine neue Zeile.
+                - Der ursprüngliche Text, dann **ein Doppelpunkt `:`** und dann **ein Leerzeichen** und dann der neue Text.
+                - Es wird empfohlen, **einfache Anführungszeichen** zu verwenden. Anführungszeichen sind erforderlich, wenn Ihr String Leerzeichen oder Sonderzeichen enthält.
+                - Doppelte Anführungszeichen funktionieren nicht, wenn Ihr Regex das Zeichen enthält: `\` .
                     ```
-                    'orginal': 'new'
+                    'original': 'neu'
 
                     ```
-                - View [docs](https://github.com/aahnik/tgcf/wiki/Replace-Plugin) for advanced usage."""
+                - Siehe [Dokumentation](https://github.com/aahnik/tgcf/wiki/Replace-Plugin) für erweiterte Verwendung."""
             )
 
-    with st.expander("Caption"):
+    with st.expander("Beschriftung"):
         CONFIG.plugins.caption.check = st.checkbox(
-            "Apply Captions", value=CONFIG.plugins.caption.check
+            "Beschriftungen anwenden", value=CONFIG.plugins.caption.check
         )
         CONFIG.plugins.caption.header = st.text_area(
-            "Header", value=CONFIG.plugins.caption.header
+            "Kopfzeile", value=CONFIG.plugins.caption.header
         )
         CONFIG.plugins.caption.footer = st.text_area(
-            "Footer", value=CONFIG.plugins.caption.footer
+            "Fußzeile", value=CONFIG.plugins.caption.footer
         )
         st.write(
-            "You can have blank lines inside header and footer, to make space between the orignal message and captions."
+            "Sie können leere Zeilen in Kopf- und Fußzeile haben, um Platz zwischen der ursprünglichen Nachricht und den Beschriftungen zu schaffen."
         )
 
-    with st.expander("Sender"):
-        st.write("Modify the sender of forwarded messages other than the current user/bot")
-        st.warning("Show 'Forwarded from' option must be disabled or else messages will not be sent",icon="⚠️")
+    with st.expander("Absender"):
+        st.write("Ändern Sie den Absender weitergeleiteter Nachrichten außer dem aktuellen Benutzer/Bot")
+        st.warning("Die Option 'Weitergeleitet von' anzeigen muss deaktiviert sein, sonst werden Nachrichten nicht gesendet", icon="⚠️")
         CONFIG.plugins.sender.check = st.checkbox(
-            "Set sender to:", value=CONFIG.plugins.sender.check
+            "Absender setzen auf:", value=CONFIG.plugins.sender.check
         )
-        leftpad,content,rightpad = st.columns([0.05,0.9,0.05])
+        leftpad, content, rightpad = st.columns([0.05, 0.9, 0.05])
         with content:
-            user_type = st.radio("Account Type", ["Bot", "User"], index=CONFIG.plugins.sender.user_type,horizontal=True)
+            user_type = st.radio("Kontotyp", ["Bot", "Benutzer"], index=CONFIG.plugins.sender.user_type, horizontal=True)
             if user_type == "Bot":
                 CONFIG.plugins.sender.user_type = 0
                 CONFIG.plugins.sender.BOT_TOKEN = st.text_input(
-                    "Bot Token", value=CONFIG.plugins.sender.BOT_TOKEN, type="password"
+                    "Bot-Token", value=CONFIG.plugins.sender.BOT_TOKEN, type="password"
                 )
             else:
                 CONFIG.plugins.sender.user_type = 1
                 CONFIG.plugins.sender.SESSION_STRING = st.text_input(
-                    "Session String", CONFIG.plugins.sender.SESSION_STRING, type="password"
+                    "Session-String", CONFIG.plugins.sender.SESSION_STRING, type="password"
                 )
                 st.markdown(
                 """
-                ###### How to get session string?
+                ###### Wie erhalte ich einen Session-String?
 
-                Link to repl: https://replit.com/@aahnik/tg-login?v=1
+                Link zu Repl: https://replit.com/@aahnik/tg-login?v=1
                 
                 <p style="line-height:0px;margin-bottom:2em">
-                    <i>Click on the above link and enter api id, api hash, and phone no to generate session string.</i>
+                    <i>Klicken Sie auf den obigen Link und geben Sie API ID, API HASH und Telefonnummer ein, um einen Session-String zu generieren.</i>
                 </p>
                 
                 
-                > <small>**Note from developer:**<small>
+                > <small>**Hinweis vom Entwickler:**<small>
                 >
-                > <small>Due some issues logging in with a user account using a phone no is not supported in this web interface.</small>
+                > <small>Aufgrund einiger Probleme wird die Anmeldung mit einem Benutzerkonto über eine Telefonnummer in dieser Weboberfläche nicht unterstützt.</small>
                 >
-                > <small>I have built a command-line program named tg-login (https://github.com/aahnik/tg-login) that can generate the session string for you.</small>
+                > <small>Ich habe ein Kommandozeilenprogramm namens tg-login (https://github.com/aahnik/tg-login) erstellt, das den Session-String für Sie generieren kann.</small>
                 >
-                > <small>You can run tg-login on your computer, or securely in this repl. tg-login is open source, and you can also inspect the bash script running in the repl.</small>
+                > <small>Sie können tg-login auf Ihrem Computer ausführen oder sicher in diesem Repl. tg-login ist Open Source, und Sie können auch das Bash-Skript inspizieren, das im Repl läuft.</small>
                 >
-                > <small>What is a session string?</small>
+                > <small>Was ist ein Session-String?</small>
                 > <small>https://docs.telethon.dev/en/stable/concepts/sessions.html#string-sessions</small>
                 """
-                ,unsafe_allow_html=True)
+                , unsafe_allow_html=True)
 
-    if st.button("Save"):
+    if st.button("Speichern"):
         write_config(CONFIG)

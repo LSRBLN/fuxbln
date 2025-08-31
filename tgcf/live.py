@@ -162,4 +162,20 @@ async def start_sync() -> None:
             )
         )
     config.from_to = await config.load_from_to(client, config.CONFIG.forwards)
+    
+    # Start interval posting for enabled forwards
+    try:
+        from tgcf.plugins.interval import TgcfInterval
+        interval_plugin = TgcfInterval({})
+        await interval_plugin.__ainit__()
+        
+        for forward in config.CONFIG.forwards:
+            if forward.enable_interval_posting and forward.use_this:
+                await interval_plugin.start_interval_posting(forward, client)
+                logging.info(f"Started interval posting for forward: {forward.con_name}")
+    except ImportError:
+        logging.warning("Interval plugin not available")
+    except Exception as e:
+        logging.error(f"Error starting interval posting: {e}")
+    
     await client.run_until_disconnected()
