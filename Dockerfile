@@ -1,17 +1,36 @@
-FROM python:3.10
-ENV VENV_PATH="/venv"
-ENV PATH="$VENV_PATH/bin:$PATH"
+FROM python:3.10-slim
+
+# Set working directory
 WORKDIR /app
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends apt-utils && \
-    apt-get upgrade -y && \
-    apt-get install ffmpeg tesseract-ocr -y && \
-    apt-get autoclean
-RUN pip install --upgrade poetry
-RUN python -m venv /venv
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    ffmpeg \
+    tesseract-ocr \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements first for better caching
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
 COPY . .
-RUN poetry build && \
-    /venv/bin/pip install --upgrade pip wheel setuptools &&\
-    /venv/bin/pip install dist/*.whl
+
+# Create necessary directories
+RUN mkdir -p /app/config /app/logs
+
+# Expose port
 EXPOSE 8501
-CMD tgcf-web
+
+# Set environment variables
+ENV STREAMLIT_SERVER_PORT=8501
+ENV STREAMLIT_SERVER_ADDRESS=0.0.0.0
+ENV STREAMLIT_SERVER_HEADLESS=true
+ENV STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8501/_stcore/health || exit 1
+
+# Run the application
+CMD ["streamlit", "run", "tgcf/web_ui/0_👋_Hello.py", "--server.port=8501", "--server.address=0.0.0.0"]
